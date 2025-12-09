@@ -7,17 +7,27 @@ import { getAll, get5First, getRedGoods } from './api/goods';
 
 export const App: React.FC = () => {
   const [listOfGoods, setListOfGoods] = useState<Good[]>([]);
+  const [error, setError] = useState(false);
 
   const handleClickAllGoods = useCallback(
-    () => getAll().then(setListOfGoods),
+    () =>
+      getAll()
+        .then(setListOfGoods)
+        .catch(() => setError(true)),
     [],
   );
   const handleClick5FirstGoods = useCallback(
-    () => get5First().then(setListOfGoods),
+    () =>
+      get5First()
+        .then(setListOfGoods)
+        .catch(() => setError(true)),
     [],
   );
   const handleRedGoods = useCallback(
-    () => getRedGoods().then(setListOfGoods),
+    () =>
+      getRedGoods()
+        .then(setListOfGoods)
+        .catch(() => setError(true)),
     [],
   );
 
@@ -41,7 +51,11 @@ export const App: React.FC = () => {
         Load red goods
       </button>
 
-      <GoodsList goods={listOfGoods} />
+      {error ? (
+        <p style={{ color: 'red' }}>`Error during downloading a list!!!`</p>
+      ) : (
+        <GoodsList goods={listOfGoods} />
+      )}
     </div>
   );
 };
